@@ -6,7 +6,7 @@ use App\Filament\Resources\ProcedureResource\Pages;
 use App\Filament\Resources\ProcedureResource\RelationManagers;
 use App\Models\Procedure;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,12 +17,12 @@ class ProcedureResource extends Resource
 {
     protected static ?string $model = Procedure::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Forms\Components\TextInput::make('bed_number')
                     ->required()
                     ->maxLength(255),

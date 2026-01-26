@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\PatientResource\RelationManagers;
 
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,10 +14,10 @@ class ProceduresRelationManager extends RelationManager
 {
     protected static string $relationship = 'procedures';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Forms\Components\TextInput::make('bed_number')
                     ->required()
                     ->maxLength(255),

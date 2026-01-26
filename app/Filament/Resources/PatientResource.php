@@ -6,23 +6,22 @@ use App\Filament\Resources\PatientResource\Pages;
 use App\Filament\Resources\PatientResource\RelationManagers;
 use App\Models\Patient;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PatientResource extends Resource
 {
     protected static ?string $model = Patient::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -58,8 +57,8 @@ class PatientResource extends Resource
                 Tables\Columns\TextColumn::make('bed_number')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')
-                     ->badge()
-                     ->color(fn (string $state): string => match ($state) {
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
                         'chronic' => 'info',
                         'post_op' => 'warning',
                         default => 'gray',
