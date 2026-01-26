@@ -25,7 +25,6 @@ class PacResource extends Resource
             ->schema([
                 Forms\Components\Select::make('patient_id')
                     ->relationship('patient', 'name')
-                    ->required()
                     ->searchable()
                     ->preload(),
                 Forms\Components\TextInput::make('bed_number')
@@ -69,7 +68,12 @@ class PacResource extends Resource
                         default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Time')
+                    ->dateTime()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('fulfilledBy.name')
+                    ->label('Fulfilled By'),
+                Tables\Columns\TextColumn::make('fulfilled_at')
+                    ->label('Fulfilled Time')
                     ->dateTime()
                     ->sortable(),
             ])
