@@ -1,0 +1,112 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\PacResource\Pages;
+use App\Filament\Resources\PacResource\RelationManagers;
+use App\Models\Pac;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+class PacResource extends Resource
+{
+    protected static ?string $model = Pac::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\Select::make('patient_id')
+                    ->relationship('patient', 'name')
+                    ->required()
+                    ->searchable()
+                    ->preload(),
+                Forms\Components\TextInput::make('bed_number')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'cleared' => 'Cleared',
+                        'rejected' => 'Rejected',
+                    ])
+                    ->required()
+                    ->default('pending'),
+                Forms\Components\Hidden::make('added_by'),
+                Forms\Components\Hidden::make('fulfilled_by'),
+                Forms\Components\Textarea::make('remarks')
+                    ->columnSpanFull(),
+                Forms\Components\DateTimePicker::make('fulfilled_at')
+                     ->hidden(),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('bed_number')
+                    ->label('Bed No')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('patient.name')
+                    ->label('Patient Name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('addedBy.name')
+                    ->label('Added By'),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'cleared' => 'success',
+                        'rejected' => 'danger',
+                        default => 'gray',
+                    }),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Time')
+                    ->dateTime()
+                    ->sortable(),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\Action::make('fulfill')
+                    ->requiresConfirmation()
+                    ->action(fn (Pac $record) => $record->update([
+                        'status' => 'cleared',
+                        'fulfilled_by' => auth()->id(),
+                        'fulfilled_at' => now(),
+                    ]))
+                    ->visible(fn (Pac $record) => $record->status === 'pending'),
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListPacs::route('/'),
+            'create' => Pages\CreatePac::route('/create'),
+            'edit' => Pages\EditPac::route('/{record}/edit'),
+        ];
+    }
+}

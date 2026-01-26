@@ -45,4 +45,39 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function pacs()
+    {
+        return $this->hasMany(Pac::class, 'added_by');
+    }
+
+    public function fulfilledPacs()
+    {
+        return $this->hasMany(Pac::class, 'fulfilled_by');
+    }
+
+    public function procedures()
+    {
+        return $this->hasMany(Procedure::class, 'added_by');
+    }
+
+    public function finishedProcedures()
+    {
+        return $this->hasMany(Procedure::class, 'finished_by');
+    }
+
+    public function postOpRequests()
+    {
+        return $this->hasMany(PostOpRequest::class, 'added_by');
+    }
+
+    public function completedPostOpRequests()
+    {
+        return $this->hasMany(PostOpRequest::class, 'completed_by');
+    }
+
+    public function chronicRounds()
+    {
+        return $this->hasMany(ChronicRound::class, 'doctor_id');
+    }
 }
