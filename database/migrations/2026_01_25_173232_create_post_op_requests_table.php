@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('post_op_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('patient_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('bed_number');
             $table->enum('status', ['requested', 'completed'])->default('requested');
             $table->text('advice')->nullable();

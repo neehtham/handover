@@ -23,11 +23,6 @@ class ProcedureResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('patient_id')
-                    ->relationship('patient', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
                 Forms\Components\TextInput::make('bed_number')
                     ->required()
                     ->maxLength(255),
@@ -73,6 +68,12 @@ class ProcedureResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('finishedBy.name')
+                    ->label('Finished By'),
+                Tables\Columns\TextColumn::make('finished_at')
+                    ->label('Finished Time')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
                 //

@@ -36,7 +36,15 @@ class PatientResource extends Resource
                     ])
                     ->required(),
                 Forms\Components\Toggle::make('is_discharged')
-                    ->required(),
+                    ->required()
+                    ->live()
+                    ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set, ?bool $state) {
+                        if ($state) {
+                            $set('discharged_at', now());
+                        } else {
+                            $set('discharged_at', null);
+                        }
+                    }),
                 Forms\Components\DateTimePicker::make('discharged_at'),
             ]);
     }
@@ -84,9 +92,6 @@ class PatientResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\PacsRelationManager::class,
-            RelationManagers\ProceduresRelationManager::class,
-            RelationManagers\PostOpRequestsRelationManager::class,
             RelationManagers\ChronicRoundsRelationManager::class,
         ];
     }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('procedures', function (Blueprint $table) {
             $table->id(); // Request Number
-            $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('patient_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('bed_number');
             $table->string('procedure_name');
             $table->enum('status', ['pending', 'done'])->default('pending');

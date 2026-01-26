@@ -23,11 +23,6 @@ class PostOpRequestResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('patient_id')
-                    ->relationship('patient', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
                 Forms\Components\TextInput::make('bed_number')
                     ->required()
                     ->maxLength(255),
@@ -70,6 +65,12 @@ class PostOpRequestResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('completedBy.name')
+                    ->label('Completed By'),
+                Tables\Columns\TextColumn::make('completed_at')
+                    ->label('Completed Time')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\Filter::make('pending')
