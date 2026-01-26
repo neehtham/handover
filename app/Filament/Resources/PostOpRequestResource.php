@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Actions;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -78,8 +79,8 @@ class PostOpRequestResource extends Resource
                     ->default(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('complete')
+                Actions\EditAction::make(),
+                Actions\Action::make('complete')
                     ->requiresConfirmation()
                     ->action(fn (PostOpRequest $record) => $record->update([
                         'status' => 'completed',
@@ -89,8 +90,8 @@ class PostOpRequestResource extends Resource
                     ->visible(fn (PostOpRequest $record) => $record->status === 'requested'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

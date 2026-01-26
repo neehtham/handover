@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Actions;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -81,7 +82,7 @@ class PacResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\Action::make('fulfill')
+                Actions\Action::make('fulfill')
                     ->requiresConfirmation()
                     ->action(fn (Pac $record) => $record->update([
                         'status' => 'cleared',
@@ -89,11 +90,11 @@ class PacResource extends Resource
                         'fulfilled_at' => now(),
                     ]))
                     ->visible(fn (Pac $record) => $record->status === 'pending'),
-                Tables\Actions\EditAction::make(),
+                Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
