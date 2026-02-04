@@ -7,6 +7,7 @@ use App\Filament\Resources\ProcedureResource\RelationManagers;
 use App\Models\Pac;
 use App\Models\Procedure;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -25,12 +26,18 @@ class ProcedureResource extends Resource
     {
         return $schema
             ->components([
-                Forms\Components\TextInput::make('bed_number')
+                TextInput::make('bed_number')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('procedure_name')
+                TextInput::make('procedure_name')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('patient_id')
+                    ->label('Patient ID')
+                    ->required(),
+                TextInput::make('patient_name')
+                    ->label('Patient Name')
+                    ->required(),
                 Forms\Components\Select::make('status')
                     ->options([
                         'pending' => 'Pending',
