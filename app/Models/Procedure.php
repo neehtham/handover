@@ -11,16 +11,25 @@ class Procedure extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'patient_id',
+        'patient_name',
+        'bed_number',
+        'procedure_name',
+        'status',
+        'remarks',
+        'finished_by',
+        'finished_at',
+        'fulfilled_by',
+        'fulfilled_at',
+    ];
 
     protected static function booted()
     {
+        parent::booted();
         static::creating(function ($model) {
             if (auth()->check()) {
                 $model->added_by = auth()->id();
-            }
-            if ($model->patient_id) {
-                $model->bed_number = Patient::find($model->patient_id)?->bed_number;
             }
         });
     }

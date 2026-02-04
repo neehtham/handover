@@ -11,16 +11,24 @@ class Pac extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+//    protected $guarded = [];
+    protected $fillable = [
+        'patient_id',
+        'fulfilled_by',
+        'is_fulfilled',
+        'added_by',
+        'bed_number',
+        'patient_name',
+        'status',
+        'fulfilled_at'
+    ];
 
-    protected static function booted()
+    protected static function boot()
     {
+        parent::boot();
         static::creating(function ($model) {
             if (auth()->check()) {
                 $model->added_by = auth()->id();
-            }
-            if ($model->patient_id) {
-                $model->bed_number = Patient::find($model->patient_id)?->bed_number;
             }
         });
     }

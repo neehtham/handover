@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('procedures', function (Blueprint $table) {
-            $table->id(); // Request Number
-            $table->foreignId('patient_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->id();
+            $table->string('patient_id');
+            $table->string('patient_name');
             $table->string('bed_number');
             $table->string('procedure_name');
             $table->enum('status', ['pending', 'done'])->default('pending');

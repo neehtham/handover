@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProcedureResource\Pages;
 use App\Filament\Resources\ProcedureResource\RelationManagers;
+use App\Models\Pac;
 use App\Models\Procedure;
 use Filament\Forms;
 use Filament\Schemas\Schema;
@@ -18,7 +19,7 @@ class ProcedureResource extends Resource
 {
     protected static ?string $model = Procedure::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Schema $schema): Schema
     {
@@ -60,7 +61,7 @@ class ProcedureResource extends Resource
                     ->label('Added By'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                     ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'pending' => 'warning',
                         'done' => 'success',
                         default => 'gray',
@@ -79,22 +80,45 @@ class ProcedureResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 Actions\Action::make('mark_done')
                     ->requiresConfirmation()
-                    ->action(fn (Procedure $record) => $record->update([
+                    ->action(fn(Procedure $record) => $record->update([
                         'status' => 'done',
                         'finished_by' => auth()->id(),
                         'finished_at' => now(),
                     ]))
-                    ->visible(fn (Procedure $record) => $record->status === 'pending'),
+                    ->visible(fn(Procedure $record) => $record->status === 'pending'),
                 Actions\EditAction::make(),
             ])
-            ->bulkActions([
+            ->recordActions(self::fulfill())
+            ->toolbarActions([
                 Actions\BulkActionGroup::make([
                     Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function fulfill(): array
+    {
+        return [
+            Actions\Action::make('fulfill')
+                ->requiresConfirmation()
+                ->schema([
+                    Forms\Components\Select::make('status')
+                        ->options([
+                            'done' => 'Done',
+                            'pending' => 'Pending',
+                        ])
+                ])
+                ->action(fn(Procedure $record, array $data) => $record->update([
+                    'status' => $data['status'],
+                    'finished_by' => auth()->id(),
+                    'finished_at' => now(),
+                ]))
+                ->visible(fn(Procedure $record) => $record->status === 'pending'),
+            Actions\EditAction::make(),
+        ];
     }
 
     public static function getRelations(): array

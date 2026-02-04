@@ -24,10 +24,10 @@ class PacResource extends Resource
     {
         return $schema
             ->components([
-                Forms\Components\Select::make('patient_id')
-                    ->relationship('patient', 'name')
-                    ->searchable()
-                    ->preload(),
+                Forms\Components\TextInput::make('patient_name')
+                    ->label('Patient Name'),
+                Forms\Components\TextInput::make('patient_id')
+                    ->label('Patient ID'),
                 Forms\Components\TextInput::make('bed_number')
                     ->required()
                     ->maxLength(255),
@@ -55,8 +55,11 @@ class PacResource extends Resource
                 Tables\Columns\TextColumn::make('bed_number')
                     ->label('Bed No')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('patient.name')
+                Tables\Columns\TextColumn::make('patient_name')
                     ->label('Patient Name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('patient_id')
+                    ->label('Patient ID')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('addedBy.name')
                     ->label('Added By'),
@@ -78,25 +81,36 @@ class PacResource extends Resource
                     ->dateTime()
                     ->sortable(),
             ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Actions\Action::make('fulfill')
-                    ->requiresConfirmation()
-                    ->action(fn (Pac $record) => $record->update([
-                        'status' => 'cleared',
-                        'fulfilled_by' => auth()->id(),
-                        'fulfilled_at' => now(),
-                    ]))
-                    ->visible(fn (Pac $record) => $record->status === 'pending'),
-                Actions\EditAction::make(),
-            ])
-            ->bulkActions([
+            ->recordActions(self::fulfill())
+            ->toolbarActions([
                 Actions\BulkActionGroup::make([
                     Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function fulfill() : array
+    {
+        return[
+            Actions\Action::make('fulfill')
+                ->requiresConfirmation()
+                ->schema([
+                    Forms\Components\Select::make('status')
+                        ->options([
+                            'cleared' => 'Cleared',
+                            'rejected' => 'Rejected',
+                        ])
+                ])
+                ->action(function (Pac $record, array $data) {
+                    return $record->update([
+                        'status' => $data['status'],
+                        'fulfilled_by' => auth()->id(),
+                        'fulfilled_at' => now(),
+                    ]);
+                })
+                ->visible(fn (Pac $record) => $record->status === 'pending'),
+            Actions\EditAction::make(),
+        ];
     }
 
     public static function getRelations(): array
