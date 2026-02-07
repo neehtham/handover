@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Patient;
-use Filament\Schemas\Components\Actions;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -33,7 +32,20 @@ class ChronicRoundsAlertWidget extends BaseWidget
                 Tables\Columns\TextColumn::make('updated_at')->label('Last Update')->dateTime(),
             ])
             ->recordActions([
-                Actions::make('add_round'),
+                \Filament\Actions\Action::make('add_round')
+                    ->form([
+                        \Filament\Forms\Components\Hidden::make('doctor_id')
+                            ->default(fn () => auth()->id()),
+                        \Filament\Forms\Components\Textarea::make('advice')
+                            ->required(),
+                    ])
+                    ->action(function (Patient $record, array $data): void {
+                        $record->chronicRounds()->create([
+                            'doctor_id' => $data['doctor_id'],
+                            'advice' => $data['advice'],
+                        ]);
+                    })
+                    ->successNotificationTitle('Round added successfully'),
             ]);
     }
 }

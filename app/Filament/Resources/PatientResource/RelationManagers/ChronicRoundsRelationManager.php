@@ -11,7 +11,7 @@ use Filament\Tables\Table;
 
 class ChronicRoundsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'Rounds';
+    protected static string $relationship = 'chronicRounds';
 
     public function form(Schema $schema): Schema
     {
