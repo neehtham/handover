@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('id_no');
+            $table->longText('diagnosis');
             $table->string('bed_number')->index();
             $table->enum('type', ['chronic', 'post_op']);
             $table->boolean('is_discharged')->default(false);
+            $table->foreignId('discharged_by')->nullable()->constrained('users');
             $table->timestamp('discharged_at')->nullable();
             $table->timestamps();
         });

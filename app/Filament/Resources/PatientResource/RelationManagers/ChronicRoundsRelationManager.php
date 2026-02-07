@@ -2,18 +2,16 @@
 
 namespace App\Filament\Resources\PatientResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Schemas\Schema;
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
 use Filament\Actions;
+use Filament\Forms;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
+use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ChronicRoundsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'chronicRounds';
+    protected static string $relationship = 'Rounds';
 
     public function form(Schema $schema): Schema
     {
@@ -21,7 +19,6 @@ class ChronicRoundsRelationManager extends RelationManager
             ->components([
                 Forms\Components\Hidden::make('doctor_id')
                     ->default(fn () => auth()->id()),
-                Forms\Components\Textarea::make('diagnosis_update'),
                 Forms\Components\Textarea::make('advice')
                     ->required(),
             ]);
@@ -39,7 +36,7 @@ class ChronicRoundsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('advice')
                     ->limit(50),
                 Tables\Columns\TextColumn::make('created_at')
-                     ->dateTime(),
+                    ->dateTime(),
             ])
             ->filters([
                 //
@@ -47,11 +44,11 @@ class ChronicRoundsRelationManager extends RelationManager
             ->headerActions([
                 Actions\CreateAction::make(),
             ])
-            ->actions([
+            ->recordActions([
                 Actions\EditAction::make(),
                 Actions\DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 Actions\BulkActionGroup::make([
                     Actions\DeleteBulkAction::make(),
                 ]),

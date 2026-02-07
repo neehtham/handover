@@ -26,6 +26,12 @@ class PatientResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('id_no')
+                    ->required()
+                    ->maxLength(255)
+                    ->label('ID No.'),
+                Forms\Components\Textarea::make('diagnosis')
+                    ->required(),
                 Forms\Components\TextInput::make('bed_number')
                     ->required()
                     ->maxLength(255),
@@ -35,17 +41,6 @@ class PatientResource extends Resource
                         'post_op' => 'Post Op',
                     ])
                     ->required(),
-                Forms\Components\Toggle::make('is_discharged')
-                    ->required()
-                    ->live()
-                    ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set, ?bool $state) {
-                        if ($state) {
-                            $set('discharged_at', now());
-                        } else {
-                            $set('discharged_at', null);
-                        }
-                    }),
-                Forms\Components\DateTimePicker::make('discharged_at'),
             ]);
     }
 
@@ -59,7 +54,7 @@ class PatientResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'chronic' => 'info',
                         'post_op' => 'warning',
                         default => 'gray',
@@ -76,17 +71,32 @@ class PatientResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('active')
-                    ->query(fn (Builder $query) => $query->where('is_discharged', false))
+                    ->query(fn(Builder $query) => $query->where('is_discharged', false))
                     ->default(),
             ])
-            ->actions([
-                Actions\EditAction::make(),
-            ])
-            ->bulkActions([
+            ->recordActions(self::discharge())
+            ->toolbarActions([
                 Actions\BulkActionGroup::make([
                     Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function discharge(): array
+    {
+        return [
+            Actions\Action::make('discharge')
+                ->requiresConfirmation()
+                ->action(function (Patient $record) {
+                    $record->update([
+                        'is_discharged' => true,
+                        'discharged_at' => now(),
+                        'discharged_by' => auth()->id(),
+                    ]);
+                })
+            ->visible(fn (Patient $record) => !$record->is_discharged),
+            Actions\EditAction::make(),
+        ];
     }
 
     public static function getRelations(): array

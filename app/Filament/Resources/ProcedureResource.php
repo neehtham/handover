@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProcedureResource\Pages;
-use App\Filament\Resources\ProcedureResource\RelationManagers;
 use App\Models\Pac;
 use App\Models\Procedure;
 use Filament\Forms;

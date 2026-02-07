@@ -98,7 +98,7 @@ class PacResource extends Resource
                     Forms\Components\Select::make('status')
                         ->options([
                             'cleared' => 'Cleared',
-                            'rejected' => 'Rejected',
+                            'review' => 'Review',
                         ])
                 ])
                 ->action(function (Pac $record, array $data) {

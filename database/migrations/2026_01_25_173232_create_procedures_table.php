@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('patient_name');
             $table->string('bed_number');
             $table->string('procedure_name');
-            $table->enum('status', ['pending', 'done'])->default('pending');
+            $table->enum('status', ['pending', 'done', 'in progress'])->default('pending');
             $table->text('remarks')->nullable();
             $table->foreignId('added_by')->constrained('users');
             $table->foreignId('finished_by')->nullable()->constrained('users');
