@@ -14,7 +14,7 @@ class ChronicRoundsAlertWidget extends BaseWidget
 
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Chronic Patients Pending Rounds Today';
+    protected static ?string $heading = 'Pending Rounds Today';
 
     public function table(Table $table): Table
     {

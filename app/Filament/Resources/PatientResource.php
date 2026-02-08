@@ -54,7 +54,7 @@ class PatientResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'chronic' => 'info',
                         'post_op' => 'warning',
                         default => 'gray',
@@ -71,7 +71,7 @@ class PatientResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('active')
-                    ->query(fn(Builder $query) => $query->where('is_discharged', false))
+                    ->query(fn (Builder $query) => $query->where('is_discharged', false))
                     ->default(),
             ])
             ->recordActions(self::discharge())
@@ -94,7 +94,7 @@ class PatientResource extends Resource
                         'discharged_by' => auth()->id(),
                     ]);
                 })
-            ->visible(fn (Patient $record) => !$record->is_discharged),
+                ->visible(fn (Patient $record) => ! $record->is_discharged),
             Actions\EditAction::make(),
         ];
     }
