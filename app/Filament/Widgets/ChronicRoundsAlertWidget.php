@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Patient;
 use Filament\Tables;
+use Filament\Tables\Enums\PaginationMode;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,7 @@ class ChronicRoundsAlertWidget extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
+            ->paginationMode(PaginationMode::Default)
             ->query(
                 Patient::query()
                     ->where('is_discharged', false)
@@ -33,7 +35,7 @@ class ChronicRoundsAlertWidget extends BaseWidget
             ])
             ->recordActions([
                 \Filament\Actions\Action::make('add_round')
-                    ->form([
+                    ->schema([
                         \Filament\Forms\Components\Hidden::make('doctor_id')
                             ->default(fn () => auth()->id()),
                         \Filament\Forms\Components\Textarea::make('advice')

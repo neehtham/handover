@@ -8,10 +8,21 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class ChronicRoundsRelationManager extends RelationManager
 {
     protected static string $relationship = 'chronicRounds';
+
+    public static function getTitle (Model $ownerRecord, string $pageClass): string
+    {
+        return 'Rounds';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Round';
+    }
 
     public function form(Schema $schema): Schema
     {

@@ -64,6 +64,7 @@ class PatientResource extends Resource
                 Tables\Columns\TextColumn::make('discharged_at')
                     ->dateTime()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('dischargedBy.name'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -11,8 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Actions;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PacResource extends Resource
 {
@@ -35,9 +33,8 @@ class PacResource extends Resource
                     ->options([
                         'pending' => 'Pending',
                         'cleared' => 'Cleared',
-                        'rejected' => 'Rejected',
+                        'review' => 'review',
                     ])
-                    ->required()
                     ->default('pending'),
                 Forms\Components\Hidden::make('added_by'),
                 Forms\Components\Hidden::make('fulfilled_by'),
@@ -68,7 +65,7 @@ class PacResource extends Resource
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'warning',
                         'cleared' => 'success',
-                        'rejected' => 'danger',
+                        'review' => 'danger',
                         default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('created_at')

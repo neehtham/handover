@@ -35,4 +35,9 @@ class Patient extends Model
     {
         return $this->hasMany(ChronicRound::class);
     }
+
+    public function dischargedBy()
+    {
+        return $this->belongsTo(User::class, 'discharged_by');
+    }
 }
