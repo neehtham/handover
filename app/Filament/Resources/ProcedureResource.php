@@ -32,11 +32,9 @@ class ProcedureResource extends Resource
                     ->required()
                     ->maxLength(255),
                 TextInput::make('patient_id')
-                    ->label('Patient ID')
-                    ->required(),
+                    ->label('Patient ID'),
                 TextInput::make('patient_name')
-                    ->label('Patient Name')
-                    ->required(),
+                    ->label('Patient Name'),
                 Forms\Components\Select::make('status')
                     ->options([
                         'pending' => 'Pending',

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('procedures', function (Blueprint $table) {
             $table->id();
-            $table->string('patient_id');
-            $table->string('patient_name');
+            $table->string('patient_id')->nullable();
+            $table->string('patient_name')->nullable();
             $table->string('bed_number');
             $table->string('procedure_name');
             $table->enum('status', ['pending', 'done', 'in progress'])->default('pending');

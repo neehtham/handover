@@ -27,11 +27,9 @@ class PendingProceduresWidget extends BaseWidget
                     ->label('Add Procedure Request')
                     ->schema([
                         TextInput::make('patient_id')
-                            ->label('Patient ID')
-                            ->required(),
+                            ->label('Patient ID'),
                         TextInput::make('patient_name')
-                            ->label('Patient Name')
-                            ->required(),
+                            ->label('Patient Name'),
                         TextInput::make('bed_number')
                             ->label('Bed Number')
                             ->required(),

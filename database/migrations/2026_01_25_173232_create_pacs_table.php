@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('pacs', function (Blueprint $table) {
             $table->id();
-            $table->string('patient_id');
-            $table->string('patient_name');
+            $table->string('patient_id')->nullable();
+            $table->string('patient_name')->nullable();
             $table->string('bed_number');
-            $table->enum('status', ['pending', 'cleared', 'review'])->default('pending');
+            $table->enum('status', ['pending', 'cleared', 'progress'])->default('pending');
             $table->foreignId('added_by')->constrained('users');
             $table->foreignId('fulfilled_by')->nullable()->constrained('users');
             $table->text('remarks')->nullable();
